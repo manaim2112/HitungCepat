@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML5 Math Battle</title>
+    <style>
+        body {
+            background-color:#1c00db;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size:11px;
+            color :#fff;
+            margin: 0px;
+            height: 84vh;
+        }
+        .bg-purple {
+            background-color: #6002ee;
+        }
+        .bg-white {
+            background-color: #ffffff;
+        }
+        .bg-light {
+            background-color:#eaeaea !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .text-dark {
+            color:#191919;
+        }
+        .text-weigh-bold {
+            font-weight: bold;
+        }
+
+        .m-auto {
+            margin: auto;
+        }
+        .mt-50 {
+            margin-top: 18%;
+        }
+
+        .mt-3 {
+            margin-top: 30px;;
+        }
+        .container {
+            padding-left:30px;
+            padding-right:30px;
+        }
+
+        .h3 {
+            font-size:20pt;
+            font-weight: bold;
+        }
+        .h2 {
+            font-size:60pt;
+            font-weight: bold;
+        }
+
+        .input {
+            margin-top:5px;
+        }
+
+        .input-form {
+            border:none;
+            border-radius: 12px;
+            background: #fff;
+            height: 30px;
+            font-size:20pt;
+            padding:5px;
+        }
+        .w-100 {
+            width:100%;
+        }
+        .vh-100 {
+            height: 84vh;
+
+        }
+        .rounded-top {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .shadow-sm {
+            box-shadow:#150f6f 1px 2px 13px;
+        }
+        .nav {
+            padding:10px;
+
+        }
+
+    </style>
+</head>
+<body>
+    <br>
+    <div class="bg-purple">
+        <div class="container nav">
+            <div class="h3">CepatHitung V.1</div>
+        </div>
+
+            <br>
+            <div class="text-center bg-white rounded-top shadow-sm vh-100 text-dark" style="padding: 10px;">
+                <div>
+                    <svg viewBox="0 0 300 27" xmls="http://www.w3.org/2000/svg" stroke="grey" fill="darkgrey">
+                        <circle cx="4%" id="CircleStart" cy="15" r="10" stroke="darkgrey" fill="white"/>
+                        <circle cx="96%" id="CircleStop" cy="15" r="10" stroke="white" fill="grey"/>
+                    </svg>
+                    <article class="h2" id="calcNow">
+                        
+                    </article>
+            
+                    <br>
+            
+                    <div class="input">
+                        <input type="text" style="width: 300px;" class="input-form text-center text-dark bg-light text-weigh-bold" id="value-form" placeholder="Ketik..." required>
+                    </div>
+        
+                    
+                    <div id="resultVal" class="mt-3">
+                        Please wait !
+                    </div>
+                </div>
+                <br>
+            </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    
+    <script type="text/javascript">
+
+        const SelectText = document.querySelector('input');
+        const AnythingText = document.querySelector('article');
+        const ResultValue = document.getElementsByClassName('resultVal');
+        const PointResult = document.querySelector('div#resultVal');
+        const CircleStart = document.querySelector('circle#CircleStart');
+        const CircleStop = document.querySelector('circle#CircleStop');
+
+        let Operator = ['+', '-', '×'];
+        let resultVal = '';
+        let point = 0;
+        let wrong = 0;
+        let timer = 0;
+
+        window.addEventListener('DOMContentLoaded', function(e) {
+
+            Swal.fire({
+                type    :'info',
+                title   : 'Mulai Berlatih',
+                text    : 'Pastikan anda men-setel Keybord mode number, Ketika anda keluar dari peringatan ini, maka anda akan langsung mulai',
+            }).then((result) => {
+                if(result.value) {
+                    SelectText.focus();
+                    setInterval(() => {
+                        timer++;
+                    }, 1000);
+                }
+            });
+
+            SelectText.addEventListener('change', function(event) {
+
+                let persen = (4+point);
+                if(persen > 96) {
+                    AlertInput('success');
+                    Swal.fire({
+                        type            : 'success',
+                        title           : 'Selesai',
+                        text            : 'Selamat, lihat hasilnya dengan di belakang ini',
+                        focusConfirm    : false
+
+                    });
+                    PointResult.textContent = "Kecepatan berhitung anda adalah : "+ Math.floor((point/timer)*60) + " hitung/detik \n\n Benar : "+ point +" ; Salah : "+ wrong;
+
+                    return;
+                }
+
+                if(event.srcElement.value == parseInt(resultVal)) {
+                    point += 2;
+                    CircleStart.setAttribute('cx', persen +'%');
+                } else {
+                    wrong++;    
+                }
+                SelectText.value = '';
+                return RunningObj();
+            });
+            
+            return RunningObj();
+        });
+
+        
+        function RunningObj(operation) {
+            let Number1 = Math.floor(Math.random()*10);
+            let Number2 = Math.floor(Math.random()*10);
+            let RandOp = Math.floor(Math.random()*Operator.length);
+            let ValueOp = Operator[RandOp];
+            
+            if(Number1 < Number2) {
+                AnythingText.textContent = Number2+ ' ' +ValueOp+ ' ' +Number1;
+            } else {
+                AnythingText.textContent = Number1+ ' ' +ValueOp+ ' ' +Number2;
+            }
+
+            switch(RandOp) {
+                case 1 : 
+                    resultVal = (Number1-Number2);
+                    if(resultVal < 0) {
+                        resultVal = (Number2-Number1);
+                    }
+                break;
+                case 2 : 
+                    resultVal = (Number1*Number2);
+                break;
+                default :
+                    resultVal = (Number1+Number2);
+                break;
+            }
+            return console.log(resultVal);
+        }
+
+        function AlertInput(response) {
+            switch(response) {
+                case 'success' :
+                    SelectText.value = 'selesai';
+                    SelectText.setAttribute('disabled', 'disabled');
+                break;
+                default :
+                    SelectText.value = '';
+                break;
+            }
+        }
+
+        
+        
+        
+        
+    </script>
+</body>
+</html>
